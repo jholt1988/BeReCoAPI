@@ -1,5 +1,5 @@
 
-const { Op, Sequelize } = require('sequelize')
+const { Op, Sequelize, where } = require('sequelize')
 const { default: Stripe } = require('stripe')
 const { Carts, CartItems, Orders, OrderItems, Products } = require('../db')
 const User = require('../Models/User')
@@ -40,7 +40,7 @@ exports.createCartItem = async (req, res) => {
     console.log(product)
     const cartItem = { 
     
-        ProductId: req.body.ProductId,
+        ProductId: product.id,
         quantity: req.body.quantity, 
         CartId: req.body.CartId,
         Price: product.price
@@ -133,7 +133,8 @@ exports.loadActiveCart = async (req, res) => {
         
     Carts.findByPk(cartId),
         CartItems.findAll({
-            where: { CartId: cartId }
+            where: { CartId: cartId },
+            
 })
         
                 .then(async data => {
@@ -166,7 +167,8 @@ exports.CheckOut = async (req, res) => {
     
     // Load cart items
     const cartItems = await CartItems.findAll({
-        where: { CartId: cart.id }
+        where: { CartId: cart.id },
+
     })
         .then(data => {
             const cartitems = data

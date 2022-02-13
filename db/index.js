@@ -46,7 +46,10 @@ const OrderItems =  OrderItemsModel(sequelize, Sequelize);
 const Address =  AddressModel(sequelize, Sequelize);
 
 User.Address = User.hasMany(Address)
-Carts.CartItems = CartItems.belongsTo(Carts)
+Carts.hasMany(CartItems)
+CartItems.belongsTo(Carts)
+
+
 
 
 
