@@ -1,0 +1,34 @@
+{
+  "name": "berecoapi",
+  "version": "1.0.0",
+  "description": "A backend ecommerce rest API. That allows for user management and authentication, inventory management, order management",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -r dotenv/config index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jholt1988/BentlyRetailCo.git"
+  },
+  "keywords": [
+    "API",
+    "ECOMMERCE"
+  ],
+  "author": "J. Alexander",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.14.1",
+    "stripe": "^8.202.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
