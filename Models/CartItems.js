@@ -36,11 +36,11 @@ module.exports =(sequelize, Sequelize)  => {
             }
             
       },
-      Price: {
+      price: {
           type: DataTypes.DECIMAL,
           references: {
               model: 'Products',
-              key: 'Price'
+              key: 'price'
           }
         }
         

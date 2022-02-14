@@ -10,6 +10,7 @@ exports.create = (req, res) => {
         return;
     }
 
+    
     const user = {
         username: req.body.username,
         password: req.body.password,
@@ -19,7 +20,6 @@ exports.create = (req, res) => {
     
 
     }
-    
     User.create(user)
         .then(data => {
             res.send(data)
@@ -110,5 +110,20 @@ exports.deleteOne = (req, res) => {
             res.status(500).send({
             message: err.message
         })
-    })
+        })
+    
 }
+
+
+
+// exports.findOneByUsername = (req, res,username ) => {
+
+//     User.findOne({
+//         where: {
+//         username:username
+//         }
+//     })
+//         .then(result => {
+//         res.send(result)
+//     })
+// }

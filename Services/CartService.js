@@ -40,10 +40,10 @@ exports.createCartItem = async (req, res) => {
     console.log(product)
     const cartItem = { 
     
-        ProductId: product.id,
+        ProductId: req.body.ProductId,
         quantity: req.body.quantity, 
         CartId: req.body.CartId,
-        Price: product.price
+        
     
     
     }
@@ -131,9 +131,18 @@ exports.loadActiveCart = async (req, res) => {
     const cartId = await active[0].dataValues.id
         
         
-    Carts.findByPk(cartId),
+    Carts.findByPk(cartId, {
+        include: {
+            model: CartItems,
+
+        }
+    }),
         CartItems.findAll({
             where: { CartId: cartId },
+            include: {
+                model: Products,
+                attributes: ['productName', 'price', 'description']
+            }
             
 })
         
@@ -177,7 +186,7 @@ exports.CheckOut = async (req, res) => {
     
     // Generate total price from cart items
     const total = cartItems.reduce((total, item) => {
-        return total += item.Price;
+        return total += Number(item.price);
     }, 0);
     
     
@@ -189,13 +198,21 @@ exports.CheckOut = async (req, res) => {
     
     const orderItems = cartItems.map((item ) => {
         let Items = [] 
-       
-        const data = item.dataValues
-        console.log(data)
 
-        Items.push(data)
+        const data = Object.values(item.dataValues).map(props => {
+            const keys = Object.keys(item.dataValues) 
+            
+            const items = {props}
+            
+          
+        })
+        
+        
+           return  Items.push(data.items)
+        
+       
                 
-            return Items
+            
     
     })
 
@@ -205,7 +222,7 @@ exports.CheckOut = async (req, res) => {
 
             total: total,
             items: orderItems,
-            userId: req.params.user,
+            userId: req.body.user,
             status: 'PLACED',
     
         }

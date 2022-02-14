@@ -48,7 +48,9 @@ const Address =  AddressModel(sequelize, Sequelize);
 User.Address = User.hasMany(Address)
 Carts.hasMany(CartItems)
 CartItems.belongsTo(Carts)
-
+Products.hasMany(CartItems)
+CartItems.belongsTo(Products)
+Orders.hasMany(OrderItems)
 
 
 
