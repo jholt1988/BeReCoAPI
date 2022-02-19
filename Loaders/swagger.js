@@ -17,7 +17,7 @@ const path = require('node:path')
 
 // var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, '../api/openapi.yaml'), options);
 // var app = expressAppConfig.getApp();
-const swaggerDocument = yaml.load(fs.readFileSync(path.resolve(__dirname, '../swagger.yaml'), 'utf8'));
+const swaggerDocument = yaml.load(fs.readFileSync(path.resolve(__dirname, '../openapi.yaml'), 'utf8'));
 
 module.exports = (app) => {
 

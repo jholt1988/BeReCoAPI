@@ -1,0 +1,921 @@
+---
+openapi: 3.0.0
+info:
+  title: BrReCoAPI
+  description: An ecommerce API. That allows users to register, login, create and save carts, view and add inventory, and place and track orders. The endpoints /auth/register- to create new user records, auth/login- for existing to log in, /user- to view or update user information, /carts- to create/modify user cart objects, /store- to view/add/edit product records, /orders- to place and view user order records
+  contact:
+    name: J. Holt
+    email: jordanh316@gmial.com
+  version: 1.8.8
+servers:
+- url: https://virtserver.swaggerhub.com/holtenterprises/br-co_api/1.8.8
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:8081
+  description: Development/Local
+tags:
+- name: auth
+- name: carts
+- name: orders
+- name: products
+- name: user
+paths:
+  /auth/login:
+    post:
+      tags:
+      - auth
+      - UserLogin
+      summary: User Login
+      description: Endpoint to authorize and authenticate user
+      operationId: post-auth-login
+      requestBody:
+        description: Request Body To Login User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_login_body'
+      responses:
+        "200":
+          description: OK
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Username or password doesn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "404":
+          description: 'User Not Found '
+  /auth/register:
+    post:
+      tags:
+      - auth
+      - RegisterNewUser
+      summary: Register New User
+      description: Registers(creates) a new user record
+      operationId: post-auth-register
+      requestBody:
+        description: The Body To Create A New User Record
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_register_body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Missing or Incorrect information
+  /users/{user}:
+    get:
+      tags:
+      - user
+      - GetUserByID
+      summary: Get User Info by User ID
+      description: Retrieve the information of the user with the matching user ID.
+      operationId: get-users-userId
+      parameters:
+      - name: user
+        in: path
+        description: Id of an existing user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    username: Asmith
+                    password: password
+                    id: 03902-fd923-df00
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    DOB: 1997-10-31
+                    createdAt: 2019-08-24
+                    updatedAt: 2022-02-12
+        "404":
+          description: User Not Found
+    put:
+      tags:
+      - user
+      - UpdateUserById
+      summary: Update User Recored
+      description: Updates properties of user record identified by the userid parameter.
+      operationId: put-users-userId
+      parameters:
+      - name: user
+        in: path
+        description: Id of an existing user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Request Body To Update A User Record
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_user_body'
+      responses:
+        "200":
+          description: User Record Updated
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: 'Bad Request- '
+        "404":
+          description: 'Not Found-Please Try Again '
+    delete:
+      tags:
+      - user
+      - DeleteUser
+      summary: Delete User Record
+      description: Delete user  record specified by user(userid) param
+      operationId: delete-users-user
+      parameters:
+      - name: user
+        in: path
+        description: Id of an existing user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /user:
+    get:
+      tags:
+      - user
+      - GetAllUsers
+      summary: Get All User
+      description: Retrieves a list of all users
+      operationId: get-user-list
+      responses:
+        "200":
+          description: 'User Record Found '
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+      - user
+      - CreateNewUser
+      summary: Create New User
+      description: Create a new user.
+      operationId: post-user
+      requestBody:
+        description: Post the necessary fields for the API to create a new user.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_body'
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: 1996-08-24
+      responses:
+        "201":
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    username: bobf
+                    password: pasword
+                    id: 12jio-j405
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    DOB: 1996-08-24
+                    emailVerified: false
+                    createdAt: 2020-11-18
+                    updatedAt: 2022-2-21
+        "400":
+          description: Missing Required Information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        "409":
+          description: Email Already Taken
+  /store/products:
+    get:
+      tags:
+      - products
+      - GetAllProducts
+      summary: Get List of All Products
+      description: Retrieves list of all products in inventory
+      operationId: get-store-products
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+      - products
+      - CreateProduct
+      summary: Create(add) product record
+      description: Creates a new product record
+      operationId: post-store-products
+      requestBody:
+        description: Product Request Body To Create A Product Record
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/store_products_body'
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: User Not Created
+  /store/products/{productId}:
+    get:
+      tags:
+      - products
+      - GetProductById
+      summary: Get Product By ID
+      description: Retrieves product record identified by productID parametet
+      operationId: get-store-:productId
+      parameters:
+      - name: productId
+        in: path
+        description: Id of product record
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Product Record Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    put:
+      tags:
+      - products
+      - UpdateProductRecord
+      summary: Update A Product Record
+      description: Find and update a product record by id
+      operationId: put-store-:productI
+      parameters:
+      - name: productId
+        in: path
+        description: Id of product record
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Body To Update A Product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/products_productId_body'
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - products
+      - DeleteProduct
+      summary: Delete product record
+      description: Find a product record by id and delete it
+      operationId: delete-store-:productId-productId
+      parameters:
+      - name: productId
+        in: path
+        description: Id of product record
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /carts:
+    get:
+      tags:
+      - carts
+      - GetUserActiveCart
+      summary: Get Active User Cart
+      description: Get the users active(most recently created) cart
+      operationId: get-carts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+  /carts/{user}:
+    get:
+      tags:
+      - carts
+      - GetAllUserCarts
+      summary: Get List Of All User Cart
+      description: Retrieves a list of all user carts
+      operationId: get-carts-.:user
+      parameters:
+      - name: user
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+    put:
+      tags:
+      - carts
+      - UpdateCartItems
+      summary: Update(add or remove cart item) Carts
+      description: Finds and updates carts and cart items identified by user(user id) parameter
+      operationId: put-carts-.-user
+      parameters:
+      - name: user
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Request Body To Modify Cart Items
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carts_user_body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItems'
+    post:
+      tags:
+      - carts
+      - AddCartItems
+      summary: Adds New Cart Items To Cart
+      description: Creates new cart items and add them to user carts
+      operationId: post-carts-.-user
+      parameters:
+      - name: user
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Request Body To Add Cart Items To Cart
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carts_user_body_1'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CartItems'
+    delete:
+      tags:
+      - carts
+      - DeleteUserCart
+      summary: Delete Cart
+      description: Deletes user's active cart
+      operationId: delete-carts-.-user
+      parameters:
+      - name: user
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /carts/{user}/checkout:
+    get:
+      tags:
+      - orders
+      - GetAllUserOrders
+      summary: Get List Of User Orders
+      description: Retrieves a list of all user order
+      operationId: get-carts-user-checkout
+      parameters:
+      - name: user
+        in: path
+        description: userID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+    post:
+      tags:
+      - carts
+      - CartCheckOut
+      summary: Checkout
+      description: Applies payment and creates a order from user cart
+      operationId: post-carts-user-checkout
+      parameters:
+      - name: user
+        in: path
+        description: userID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Request Body To Create Order
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_checkout_body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+  /orders/{user}:
+    get:
+      tags:
+      - orders
+      - GetAllUserOrders
+      summary: Get List Of User Order
+      description: Retrieves A List Of User Order
+      operationId: get-orders-user
+      parameters:
+      - name: user
+        in: path
+        description: userId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+  /orders/{userId}/{cartId}:
+    get:
+      tags:
+      - orders
+      - GetUserOrderId
+      summary: Get Order By Id
+      description: Retrieves user order by orderid
+      operationId: get-orders-userId-cartId
+      parameters:
+      - name: userId
+        in: path
+        description: userId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: cartId
+        in: path
+        description: cartId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+    put:
+      tags:
+      - orders
+      - UpdateUserOrder
+      summary: Update User Order By Id
+      description: Update a user order record specified by cartId
+      operationId: put-orders-userId-cartId
+      parameters:
+      - name: userId
+        in: path
+        description: userId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: cartId
+        in: path
+        description: cartId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Request Body To Change Order Status
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userId_cartId_body'
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    User:
+      required:
+      - DOB
+      - createdAt
+      - firstName
+      - id
+      - lastName
+      - password
+      - updatedAt
+      - username
+      type: object
+      properties:
+        username:
+          minLength: 1
+          type: string
+        password:
+          minLength: 1
+          type: string
+        firstName:
+          minLength: 1
+          type: string
+        lastName:
+          minLength: 1
+          type: string
+        DOB:
+          minLength: 1
+          type: string
+        id:
+          minLength: 1
+          type: string
+        createdAt:
+          minLength: 1
+          type: string
+        updatedAt:
+          minLength: 1
+          type: string
+        email:
+          type: string
+      description: The user record.
+      x-examples:
+        example-1:
+          username: string
+          password: string
+          firstName: string
+          lastName: string
+          DOB: date string
+          id: string
+          createdAt: date-time string
+          updatedAt: date-time string
+    Product:
+      required:
+      - createdAt
+      - description
+      - id
+      - price
+      - productName
+      - quantity
+      - updatedAt
+      - vendorID
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        vendorID:
+          minLength: 1
+          type: string
+        productName:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        category:
+          type: array
+          items:
+            type: string
+        updatedAt:
+          minLength: 1
+          type: string
+        createdAt:
+          minLength: 1
+          type: string
+      description: ""
+      x-examples:
+        example-1:
+          id: 708252b2-b107-4faa-84b0-f56ca2b39533
+          vendorID: 29817d7a-abbf-4523-815e-bc6dd7344f8d
+          productName: Bentley Super High Tech Gaming RollUp Phone
+          description: The latest and fastest laptop on the market. Bentley Guarenteed
+          price: "150000"
+          quantity: "20"
+          category: "null"
+          updatedAt: 2022-02-18T01:23:17.684Z
+          createdAt: 2022-02-18T01:23:17.684Z
+    Cart:
+      required:
+      - createdAt
+      - id
+      - status
+      - updatedAt
+      - userId
+      type: object
+      properties:
+        id:
+          type: number
+        status:
+          minLength: 1
+          type: string
+        userId:
+          minLength: 1
+          type: string
+        updatedAt:
+          minLength: 1
+          type: string
+        createdAt:
+          minLength: 1
+          type: string
+      description: ""
+      x-examples:
+        example-1:
+          id: 19
+          status: ACTIVE
+          userId: 37aa9795-0eb0-4c28-a0ec-23903d652ac1
+          updatedAt: 2022-02-18T01:29:26.321Z
+          createdAt: 2022-02-18T01:29:26.321Z
+    CartItems:
+      title: CartItems
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: number
+        CartId:
+          type: string
+        price:
+          type: number
+    OrderItems:
+      title: OrderItems
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: number
+        orderId:
+          type: string
+        price:
+          type: number
+    Order:
+      title: Order
+      type: object
+      properties:
+        id:
+          type: string
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItems'
+        userId:
+          type: string
+        status:
+          type: array
+          items: {}
+      description: An Order Record
+    auth_login_body:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    auth_register_body:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        DOB:
+          type: string
+    users_user_body:
+      type: object
+      anyOf:
+      - properties:
+          password:
+            type: string
+      - properties:
+          email:
+            type: string
+      - properties:
+          DOB:
+            type: string
+    user_body:
+      required:
+      - dateOfBirth
+      - email
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+    store_products_body:
+      type: object
+      properties:
+        productName:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum:
+          - laptop
+          - desktop
+          - mobile
+          - gaming consoles
+        quantity:
+          type: integer
+        price:
+          type: string
+    products_productId_body:
+      type: object
+      oneOf:
+      - properties:
+          productName:
+            type: string
+      - properties:
+          quantity:
+            type: integer
+      - properties:
+          description:
+            type: string
+      - properties:
+          price:
+            type: string
+    inline_response_200:
+      type: object
+      properties:
+        Cart:
+          $ref: '#/components/schemas/Cart'
+        CartItems:
+          $ref: '#/components/schemas/CartItems'
+    carts_user_body:
+      type: object
+      anyOf:
+      - properties:
+          productName:
+            type: string
+          quantity:
+            type: string
+      - properties:
+          productId:
+            type: string
+          quantity:
+            type: string
+          ? ""
+          : type: string
+    carts_user_body_1:
+      type: object
+      oneOf:
+      - properties:
+          productName:
+            type: string
+      - properties:
+          productId:
+            type: string
+    user_checkout_body:
+      type: object
+      properties:
+        cart:
+          $ref: '#/components/schemas/Cart'
+        cartItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItems'
+    inline_response_200_1:
+      type: object
+      properties:
+        payment-orderInfo:
+          type: object
+    userId_cartId_body:
+      type: object
+      properties:
+        status:
+          type: string
+  requestBodies: {}
+  securitySchemes: {}
