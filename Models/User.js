@@ -24,15 +24,16 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         DOB: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.DATE,
             allowNull: true,
         },
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            primaryKey: true
+            primaryKey: true,
+            
 
-        }
+          }
 
       })
 

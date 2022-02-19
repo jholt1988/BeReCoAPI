@@ -60,7 +60,7 @@ exports.update = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-    const id = req.params.id
+    const id = req.params.id1
 
     User.findByPk(id)
         .then(data => {
@@ -90,7 +90,7 @@ exports.getAll = (req, res) => {
 }
 
 exports.deleteOne = (req, res) => {
-    const id = req.params.id
+    const id = req.params.user
     
     User.destroy({
         where: {id:id}

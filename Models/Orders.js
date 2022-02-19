@@ -14,7 +14,7 @@ module.exports =(sequelize, Sequelize) => {
 
         },
         items: {
-            type: DataTypes.ARRAY(DataTypes.HSTORE),
+            type: DataTypes.ARRAY(DataTypes.STRING),
             
         },
         userId: {

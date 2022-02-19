@@ -4,7 +4,7 @@ const Carts = require('../Services/CartService');
 const CartItems = require('../Services/CartService')
 
 module.exports = (app) => {
-    app.use('/:user/cart', router)
+    app.use('/cart', router)
 
 
    
@@ -14,10 +14,10 @@ module.exports = (app) => {
 
     router.post('/', Carts.create)
 
-    router.post('/edit', CartItems.createCartItem)
+    router.post('/:user', CartItems.createCartItem)
 
-    router.delete('/edit', Carts.deleteCart)
+    router.delete('/:user', Carts.deleteCart)
 
-    router.post('/:user/checkout', Carts.CheckOut)
+    router.post('/checkout/:user', Carts.CheckOut)
 
 }

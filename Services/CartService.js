@@ -125,12 +125,12 @@ function findActiveCart(userId) {
 exports.loadActiveCart = async (req, res) => {
     const userId = req.params.user
 
-    const active = await findActiveCart(userId)
-    console.log(active)
+    const active = await  findActiveCart(userId)
+    console.log(await active)
     
     const cartId = await active[0].dataValues.id
         
-        
+         console.log(active)
     Carts.findByPk(cartId, {
         include: {
             model: CartItems,

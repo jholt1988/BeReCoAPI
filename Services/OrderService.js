@@ -17,7 +17,7 @@ exports.findOrders = (req, res) => {
     const userId = req.params.user
 
     Orders.findAll({
-        where: {userId: req.body.user}
+        where: {userId: userId}
     })
         .then(data => {
         res.send(data)
