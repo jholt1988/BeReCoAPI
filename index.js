@@ -23,4 +23,6 @@ const startServer = () => {
     });
 }
 
-startServer();
+module.exports = startServer
+//startServer();
+
