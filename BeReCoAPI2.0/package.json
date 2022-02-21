@@ -1,0 +1,47 @@
+{
+  "name": "berecoapi2.0",
+  "version": "2.0.0",
+  "description": "An E-Commerece API. That allows for user login, user management, inventory management, placing and tracking of orders. - A project for codeacademy.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha \"/test\"",
+    "start": "nodemon -r dotenv/config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jholt1988/BentlyRetailCo.git"
+  },
+  "keywords": [
+    "ecommerece",
+    "REST",
+    "API"
+  ],
+  "author": "J.A. Holt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jholt1988/BentlyRetailCo/issues"
+  },
+  "homepage": "https://github.com/jholt1988/BentlyRetailCo#readme",
+   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "js-yaml": "^4.1.0",
+    "mocha": "^9.2.1",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.14.1",
+    "stripe": "^8.202.0",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
+  }
+
+}
