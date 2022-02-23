@@ -27,7 +27,7 @@ exports.Login = (passport.authenticate('local'),async (req, res, done) =>{
     done()
 })
 
-exports.register = async (req, res) => {
+exports.register = (req, res) => {
     const username = req.body.username
 
     const user = {

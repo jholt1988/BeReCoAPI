@@ -1,46 +1,66 @@
-const { DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
-const saltRounds = 10
+const { DataTypes, Model } = require('sequelize');
+const bcrypt = require('bcrypt')
 
-
+        
 module.exports = (sequelize, Sequelize) => {
-    const UserModel = sequelize.define('User', {
+    class UserModel extends Model {
+        validPassword= (password) => {
+   return bcrypt.compareSync(password, this.password);
+}
+
+    }
+    UserModel.init({
         
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            primaryKey: true, 
+            primaryKey: true,
             
-        }, 
+        },
 
         username: {
-            type: DataTypes.STRING, 
-            unique: true, 
+            type: DataTypes.STRING,
+            unique: true,
             allowNull: false
         },
         password: {
-            type: DataTypes.STRING, 
-            allowNull: false, 
-            set(value) {
-                bcrypt.genSalt(saltRounds, function (error, username) {
-                    bcrypt.hash(value, username, function (error, hash) {
-                      this.setDataValue('password',hash(value))
-                  })
-                })
-            }
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         email: {
-            type: DataTypes.STRING, 
+            type: DataTypes.STRING,
             allowNull: false,
-            unique:true
-        }, 
+            unique: true
+        },
         role: {
             type: DataTypes.ENUM({
-                values:['ADMIN','EMP', 'CUSTOMER']
-            }), 
+                values: ['ADMIN', 'EMP', 'CUSTOMER']
+            }),
             allowNull: false
         }
+    },
+      
+        {
+            hooks: {
+                beforeCreate: async (user) => {
+                    if (user.password) {
+                        const salt = await bcrypt.genSaltSync(10, "b");
+                        user.password = await bcrypt.hashSync(user.password, salt)
+                        console.log(user.password)
+                        return user.password
+                    }
+                },
+                beforeUpdate: async (user) => {
+                    if (user.password) {
+                        const salt = await bcrypt.genSaltSync(10, "b");
+                        user.password = await bcrypt.hashSync(user.password, salt);
+                        console.log(user.password)
+                        return  user.password
+                    }
+                }
+            },
+             sequelize, modelName: 'User' })
 
-    })
+        
     return UserModel
 }

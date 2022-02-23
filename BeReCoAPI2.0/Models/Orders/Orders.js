@@ -13,15 +13,8 @@ module.exports =(sequelize, Sequelize) => {
             allowNull: false,
 
         },
-        items: {
-            type: DataTypes.ARRAY({
-                values: DataTypes.STRING
-            }),
-            references: {
-                model: 'orderItems',
-                key: 'id'
-            }
-            
+      items: {
+          type: DataTypes.ARRAY(DataTypes.STRING) 
         },
         userId: {
             type: DataTypes.UUID,
@@ -36,10 +29,7 @@ module.exports =(sequelize, Sequelize) => {
             })
             ,
             defaultValue: 'PLACED'
-      },
-      changeStatus(newStatus) {
-            this.status = newStatus
-        }
+      }
     })
    return OrderModel
 }

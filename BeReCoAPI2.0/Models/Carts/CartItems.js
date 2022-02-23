@@ -1,9 +1,16 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
 
 
 module.exports =(sequelize, Sequelize)  => {
-  const  CartItemModel = sequelize.define('CartItems', {
+    class CartItemModel extends Model{
+        totalItem() {
+            this.total = this.price * this.quantity
+        }
+
+    }
+        
+        CartItemModel.init({
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -37,22 +44,17 @@ module.exports =(sequelize, Sequelize)  => {
       },
       price: {
           type: DataTypes.DECIMAL,
-          references: {
-              model: 'Products',
-              key: 'price'
-          }
+          
       },
       total: {
           type: DataTypes.INTEGER
 
-      },
-      totalItem() {
-          this.total = this.price * this.quantity
       }
+      
 
         
         
-  })
+  }, {sequelize, modelName: 'CartItem'})
      
     return CartItemModel
 };

@@ -1,8 +1,17 @@
-const {  DataTypes, } = require('sequelize')
+const {  DataTypes, Model } = require('sequelize')
 
 
 module.exports =  (sequelize, Sequelize) => {
-   const CartModel =  sequelize.define('Carts', {
+    class CartModel extends Model {
+        changeStatus() {
+            if (this.status === "ACTIVE") {
+                this.status = "INACTIVE"
+            } else {
+                this.status = "ACTIVE"
+            }
+        }
+    }  
+       CartModel.init({
         id: {
             type: DataTypes.INTEGER, 
             allowNull: false, 
@@ -22,16 +31,10 @@ module.exports =  (sequelize, Sequelize) => {
                 key: 'id'
             }
             
-       },
-       changeStatus() {
-           if (this.status === "ACTIVE") {
-                this.status = "INACTIVE"
-           } else {
-               this.status = "ACTIVE"
-            }
-        }
+       }
+       
         
-    })
+    },{sequelize, modelName: 'Cart'})
     return CartModel
 }
 

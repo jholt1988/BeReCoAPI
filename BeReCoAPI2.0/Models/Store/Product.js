@@ -1,8 +1,24 @@
 const { DataTypes, Model } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
-    class ProductModel extends Model{ }
-    ProductModel.init({
+    class ProductModel extends Model {
+        changeQuantity(order) {
+            const updateQuantity = this.quantity - order;
+            if (updateQuantity < 0) {
+                throw new Error(`Not Enough ${this.productName} in stock. Please lower desired quantity by ${updateQuantity}`)
+            } else {
+                this.quantity = updateQuantity
+            }
+        }
+        isOutOfStock() {
+            if (this.quantity <= 0) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+     ProductModel.init({
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -11,7 +27,8 @@ module.exports = (sequelize, Sequelize) => {
         productName: {
             type: DataTypes.STRING,
             allowNull: false,
-        },
+          
+            },
         description: {
             type: DataTypes.TEXT,
 
@@ -23,8 +40,9 @@ module.exports = (sequelize, Sequelize) => {
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0
-        },
+            defaultValue: 0,
+           
+            },
         vendorID: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4
@@ -33,26 +51,11 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.ENUM({
                 values: ["Laptop", "Desktop", "Gaming Console", "Tablet", "Wearables", "Cellphone"]
             })
-        },
-        changeQuantity(order) {
-            const updateQuantity = this.quantity - order;
-            if (updateQuantity < 0) {
-                throw new Error(`Not Enough ${this.productName} in stock. Please lower desired quantity by ${updateQuantity}`)
-            } else {
-                this.quantity = updateQuantity
-            }
-        },
-        isOutOfStock() {
-            if (this.quantity <= 0) {
-                const message = console.log('Product Out Of Stock')
-                return true
-            } else {
-                return false
-            }
         }
+        
       
-    }, {sequelize, modelName:'Product'})
-    return ProductModel
+    }, {sequelize, modelName: 'Product'})
+return ProductModel
 }
 
 
