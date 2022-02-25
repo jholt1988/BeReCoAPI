@@ -1,8 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local')
-const {User} = require('../db');
-const { Sequelize, QueryTypes } = require('sequelize')
-const sequelize = new Sequelize({dialect:'postgres'});
+const User = require('../Services/AuthService');
 const logger = require('morgan');
 
 module.exports = (app) => {
@@ -16,30 +14,23 @@ module.exports = (app) => {
     }
 
     passport.deserializeUser = (user, done) => {
-         done(null, {id})
-    }
+        User.findByPk(id, function (err, user) {
+            done(null, user)
+        }
+        )}
 
     passport.use('local', new LocalStrategy( async (username, password, done) => {
-        
-      await User.findOne({
-            where: {
-            username :  username
-        }})
-            .then( user => {
-                if (user.password == password) {
-                    console.log(user.password)
-                  return done(null, user.id)
-                } else if (!user) {
-                    throw new Error('User Not Found')
-                } else {
-                    throw new Error('Password or User Incorrect')
+        try {
+            const user = await User.login
+           if(user)
+                return done(null, user)
+           else {
+               done(err)
             }
-            }).
-            catch(err => {
+        }
+        catch (err) {
             done(err)
-            }
-            )
-    
+        }
     
     }))
 

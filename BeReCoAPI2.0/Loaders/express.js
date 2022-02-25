@@ -26,7 +26,7 @@ module.exports = (app) => {
 
     app.use(session({
         secret: SESSION_SECRET,
-        saveUninitialized: false,
+        saveUninitialized: true,
         resave: false,
         cookie: {
             secure: false,

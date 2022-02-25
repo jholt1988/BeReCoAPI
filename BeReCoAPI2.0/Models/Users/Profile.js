@@ -1,8 +1,10 @@
-const { DataTypes, } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
 module.exports = (sequelize, Sequelize) => {
 
-    const ProfileModel = sequelize.define('Profile', {
+    class ProfileModel extends Model {}
+    
+ProfileModel.init({
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -24,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         
             
-        })
+        }, {sequelize, modelName: 'Profile'})
 
     return ProfileModel      
             
