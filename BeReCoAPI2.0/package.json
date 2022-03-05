@@ -24,6 +24,7 @@
   "homepage": "https://github.com/jholt1988/BentlyRetailCo#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",

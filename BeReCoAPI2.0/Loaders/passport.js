@@ -1,38 +1,50 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local')
-const User = require('../Services/AuthService');
+const AuthService = require('../Services/AuthService');
+const AuthServiceInstance = new AuthService()
 const logger = require('morgan');
+const { User } = require('../db');
+const { chain } = require('lodash');
+
 
 module.exports = (app) => {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(logger('combined'))
 
-    passport.serializeUser = (user, done) => {
-        done(null, user.id)
-
-    }
-
-    passport.deserializeUser = (user, done) => {
-        User.findByPk(id, function (err, user) {
-            done(null, user)
-        }
-        )}
-
-    passport.use('local', new LocalStrategy( async (username, password, done) => {
-        try {
-            const user = await User.login
-           if(user)
-                return done(null, user)
-           else {
-               done(err)
-            }
-        }
-        catch (err) {
-            done(err)
-        }
+    passport.serializeUser((user, done) => {
+        console.log(`${user} serialized`)
+       return  done(null, user.id)
+        })
     
-    }))
 
+    passport.deserializeUser((id, done) => {
+        User.findByPk( id ).then(user=> {
+            
+          return  done(null, { id })
+        })
+        })
+        
+        
+    
+
+    passport.use('local', new LocalStrategy(
+        function (username, password, done) {
+        
+            authUser = User.findOne({ username: username }).then(user => {
+                hashpass = user ? user.password : ""
+                isMatch = User.validatePassword(password, hashpass, done, user)
+               return done(null, user)
+            })
+
+    
+            
+        })
+    )
+    
+        
+                
+                    
     return passport
+                
 }

@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const UserModel = require('../Models/Users/User');
 const ProfileModel = require('../Models/Users/Profile');
-const AddressModel = require('../Models/PublicModels/Address');
+const AddressModel = require('../Models/PublicModels/Address/Address');
 const ProductModel = require('../Models/Store/Product');
 const VendorModel = require('../Models/Store/Vendors');
 const CartModel = require('../Models/Carts/Carts');

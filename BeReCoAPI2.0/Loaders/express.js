@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const { SESSION_SECRET } = require('../config');
 const logger = require('morgan');
+const flash = require('connect-flash')
+const {isAuthenticated} = ('./authenticate.js')
 
 
 
@@ -19,14 +21,18 @@ module.exports = (app) => {
 
     app.use(bodyParser.json());
 
+    //Connect-Flash Middleware
+    app.use(flash())
+
+    
     
 
     //UrlEncoded
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.urlencoded({ extended: false }));
 
     app.use(session({
         secret: SESSION_SECRET,
-        saveUninitialized: true,
+        saveUninitialized: false,
         resave: false,
         cookie: {
             secure: false,

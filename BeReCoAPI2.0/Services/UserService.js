@@ -37,5 +37,13 @@ exports.UpdateProfile = (req, res) => {
         .catch(err => {
         res.send(err.message)
     })
-}
+
     
+    }
+
+    
+exports.getAllUsers = (req, res) =>{
+        User.findAll().then(users => {
+            res.send(users)
+        })
+    }

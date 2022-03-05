@@ -1,8 +1,10 @@
 
 
 const AuthRouter = require('./Auth');
-const userRouter = require('./Users')
+const UserRouter = require('./Users');
+const StoreRouter = require('./Store');
 module.exports = (app, passport) => {
   AuthRouter(app, passport)
-  userRouter(app)
+  UserRouter(app)
+  StoreRouter(app)
 }

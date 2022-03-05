@@ -1,9 +1,11 @@
-const {  DataTypes} = require('sequelize');
+const {  DataTypes, Model} = require('sequelize');
 
 
 module.exports = (sequelize,  Sequelize) =>{
 
-  const  AddressModel = sequelize.define('Address', {
+    class AddressModel extends Model {}
+    
+   AddressModel.init({
         addrOne: {
             type: DataTypes.STRING,
         },
@@ -29,7 +31,7 @@ module.exports = (sequelize,  Sequelize) =>{
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true
         }
-    })
+    }, {sequelize, modelName: "Address"})
     
     return AddressModel
 };
