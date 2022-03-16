@@ -4,8 +4,13 @@ const { DataTypes, Model } = require('sequelize');
 
 module.exports =(sequelize, Sequelize)  => {
     class CartItemModel extends Model{
-        totalItem() {
-            this.total = this.price * this.quantity
+         totalItem() {
+            const total = (this.price * this.quantity)
+            return total
+        }
+
+        changeStatus() {
+            this.isActive = false
         }
 
     }
@@ -29,7 +34,7 @@ module.exports =(sequelize, Sequelize)  => {
             }
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false,
             
         },
@@ -43,14 +48,17 @@ module.exports =(sequelize, Sequelize)  => {
             
       },
       price: {
-          type: DataTypes.DECIMAL,
+          type: DataTypes.DECIMAL
           
       },
       total: {
-          type: DataTypes.INTEGER
+          type: DataTypes.DECIMAL,
+          set() {   const total  = this.totalItem()
+                    this.setDataValue('total',total )
+        
+          }
 
-      }
-      
+            }
 
         
         

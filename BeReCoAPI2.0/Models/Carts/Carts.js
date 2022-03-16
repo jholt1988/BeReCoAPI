@@ -1,4 +1,5 @@
 const {  DataTypes, Model } = require('sequelize')
+const CartItems = require('./CartItems')
 
 
 module.exports =  (sequelize, Sequelize) => {
@@ -21,20 +22,16 @@ module.exports =  (sequelize, Sequelize) => {
         status: {
             type: DataTypes.ENUM({
                 values: ["ACTIVE", "INACTIVE"]
-            })
             
-        },
-        userId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'Users', 
-                key: 'id'
-            }
+            }),
+            defaultValue: 'ACTIVE'
             
-       }
+        }
+            
+       
        
         
-    },{sequelize, modelName: 'Cart'})
+       }, {sequelize, modelName: 'Cart'})
     return CartModel
 }
 

@@ -10,13 +10,19 @@ module.exports = (sequelize, Sequelize) => {
                 this.quantity = updateQuantity
             }
         }
-        isOutOfStock() {
+        static isOutOfStock() {
             if (this.quantity <= 0) {
                 return true
             } else {
                 return false
             }
         }
+
+        productOrder(orderQuantity) {
+            while(this.quantity > 0)
+          return  this.quantity = this.quantity - orderQuantity
+        }
+
     }
      ProductModel.init({
         id: {
@@ -38,20 +44,20 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         quantity: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false,
             defaultValue: 0,
            
             },
         vendorID: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: DataTypes.UUIDV4,
         },
         category: {
             type: DataTypes.ENUM({
                 values: ["Laptop", "Desktop", "Gaming Console", "Tablet", "Wearables", "Cellphone"]
             })
-        }
+         },
         
       
     }, {sequelize, modelName: 'Product'})

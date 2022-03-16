@@ -1,8 +1,8 @@
-const { User } = require('../db');
+const  {User, Profile}  = require('../db');
 const bcrypt = require('bcrypt');
-const Profile = require('../Models/Users/Profile');
 
-module.exports = class AuthService {
+
+
 
     
 
@@ -14,29 +14,35 @@ module.exports = class AuthService {
     *
     * */
 
-    async login(username, password) {
+exports.login = async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    // const user = User.authenticate(username, password)
         
-        // const user = User.authenticate(username, password)
-        if (user) {
-            await User.findOne({  username } ).then(user => {
-                user.getProfile({
+    await  User.findOne({
+        where: { username: username }
+    }).then(user => {
+        user.getProfile({
                        
-                        UserId: user.id
-                    }
-                )
-                    .then(profile => {
-                        return profile
-                    })
-            
-            })
-                
-                .catch(err => {
-                    throw new Error(err.message);
-                })
-    
+            where: { UserId: user.id }
         }
+        )
+            .then(profile => {
+                res.status(202).send({ user, profile })
+            })
+            
+    })
+                
+        .catch(err => {
+            throw new Error(err.message);
+        })
+    
+        
 
     }
+
+
+    
     
                
                 
@@ -52,18 +58,18 @@ module.exports = class AuthService {
     * */
     
 
-    async register(data) {
+    exports.register =  async (data) => {
         const { User: userData, Profile: userProfileData } = data
         let isReg;
         
         // check to see if user exists)
-        await User.userExist(userData.username, userData.email)
+         User.userExist(userData.username, userData.email)
             .then(bool => {
                 isReg = bool
                 console.log(isReg)
                 return isReg
             })
-        if (isReg !== false) {
+        if (isReg === false) {
             throw new Error('User already Exists. Please Login')
         } else {
             const newUser = await User.create(userData)
@@ -75,11 +81,7 @@ module.exports = class AuthService {
     
             
         }
-    }
-        
-        catch (err) {
-                    throw new Error(err)
-                }
+ 
 
     
 }

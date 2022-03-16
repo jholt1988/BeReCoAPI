@@ -1,8 +1,12 @@
-const {  DataTypes } = require('sequelize');
-
+const {  DataTypes, Model } = require('sequelize');
+const {OrderItem, CartItem} = require('../../db')
 
 module.exports =(sequelize, Sequelize) => {
-  const OrderModel = sequelize.define('Orders', {
+    class OrderModel extends Model {
+    
+ }
+    
+    OrderModel.init({
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -13,16 +17,17 @@ module.exports =(sequelize, Sequelize) => {
             allowNull: false,
 
         },
-      items: {
-          type: DataTypes.ARRAY(DataTypes.STRING) 
+        items: {
+            type: DataTypes.ARRAY(DataTypes.STRING, {
+                values: {
+                    references: {
+                        model: 'Order Item',
+                        key: 'id'
+                }}
+            })
+           
         },
-        userId: {
-            type: DataTypes.UUID,
-            references: {
-                model: 'Users',
-                key: 'id'
-            }
-        },
+       
         status: {
             type: DataTypes.ENUM({
                 values: ['PLACED', 'APPROVED', 'SHIPPED', 'DELIVERED']
@@ -30,7 +35,7 @@ module.exports =(sequelize, Sequelize) => {
             ,
             defaultValue: 'PLACED'
       }
-    })
+    }, {sequelize, modelName:'Order'})
    return OrderModel
 }
 

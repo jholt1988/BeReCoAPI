@@ -1,7 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local')
-const AuthService = require('../Services/AuthService');
-const AuthServiceInstance = new AuthService()
+const Auth = require('../Services/AuthService');
 const logger = require('morgan');
 const { User } = require('../db');
 const { chain } = require('lodash');
@@ -31,7 +30,7 @@ module.exports = (app) => {
     passport.use('local', new LocalStrategy(
         function (username, password, done) {
         
-            authUser = User.findOne({ username: username }).then(user => {
+            authUser = User.findOne({ where: { username: username } }).then(user => {
                 hashpass = user ? user.password : ""
                 isMatch = User.validatePassword(password, hashpass, done, user)
                return done(null, user)

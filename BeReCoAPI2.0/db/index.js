@@ -59,7 +59,7 @@ Cart.hasMany(CartItem, { as: 'Items' });
 CartItem.belongsTo(Cart, { as: 'Items' });
 OrderItem.hasOne(CartItem);
 CartItem.belongsTo(CartItem);
-Order.hasMany(OrderItem, { as: 'Item' });
+Order.hasMany(OrderItem, { as: 'Items' });
 OrderItem.belongsTo(Order, {as: 'Item'})
 Profile.hasMany(Order);
 Order.belongsTo(Profile);

@@ -3,8 +3,8 @@ const {isAuthenticated} = require('../Loaders/authenticate');
 const {User} = require('../db');
 const router = express.Router();
 
-const AuthService = require('../Services/AuthService');
-const AuthServiceInstance = new AuthService();
+const Auth= require('../Services/AuthService');
+
 
 
 
@@ -13,12 +13,7 @@ module.exports = (app, passport) => {
 
 
     router.post('/authenticate',
-        passport.authenticate('local', {
-            successFlash:'User Found!',
-            failureFlash:'Username or password incorrect! Check Yo Credentials',
-            failureRedirect: '/authenticate', 
-            successRedirect: `/`
-        }))
+        passport.authenticate('local'), Auth.login)
        
     router.get('/', isAuthenticated, (req, res, done) => {
         res.redirect(`../users/${req.user.id}`)
@@ -29,7 +24,7 @@ module.exports = (app, passport) => {
         const username = req.body.username
         const password = req.body.password
 
-        const user = AuthServiceInstance.login(username, password)
+        const user = Auth.login(username, password)
 
         if (user) {
            return res.status(200).send(user)
@@ -73,7 +68,7 @@ module.exports = (app, passport) => {
         }
 
         console.log(userInfo)
-        await AuthServiceInstance.register(userInfo)
+        await Auth.register(userInfo)
             .then(data => {
                 if (data) {
                     
