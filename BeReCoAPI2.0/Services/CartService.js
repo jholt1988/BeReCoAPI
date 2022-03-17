@@ -107,20 +107,27 @@ exports.checkout = async (req, res) => {
         const cartItems = await CartItem.findAll({ where: { CartId: req.params.cartId } }).then(items => {
             return items
         });
+        const cart =  await  Cart.findOne({where: {ACTIVECARTId:profile.id}})
 
-      const  OrderItems = await cartItems.map(item => OrderItem.create({id: item.id,  quantity: item.quantity, total: item.total, ...item }).then(items => {
+      const  orderItems = await cartItems.map(item => OrderItem.create({id: item.id,  quantity: item.quantity, total: item.total, ...item }).then(items => {
             return items
         }))
       
-    console.log(cartItems)
-    // Load cart items
-        const order = await stripe.orders.create({
-            items:   OrderItems,
+        const total = cartItems.reduce((total, item) => {
+            return total += parseInt(item.price.replace(/[^0-9]/g, ""));
+        }, 0);
+
+        console.log(total)
         
-        currency: "USD"
+        const order = await Order.create({ cart , total: total, items:orderItems, profileId: profile.id}).then( order => {
             
-    })
+                return order
+            })
+            
+        
        
+        console.log(order, order.total)
+
         
         
     // Generate total price from cart items
@@ -148,7 +155,7 @@ exports.checkout = async (req, res) => {
     });
 
     // On successful charge to payment method, update order status to COMPLETE
- return order
+  res.status(200).send(charge)
 }
 
 

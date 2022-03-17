@@ -1,10 +1,19 @@
+const { forEach, get } = require('lodash');
 const {  DataTypes, Model } = require('sequelize');
-const {OrderItem, CartItem} = require('../../db')
+const {Order} = require('../../db')
 
-module.exports =(sequelize, Sequelize) => {
+module.exports =(sequelize) => {
     class OrderModel extends Model {
-    
- }
+       static changeStatus() {
+            if (this.status === "PLACED") {
+                return this.status = "APPROVED"
+            } else if (this.status === "APPROVED") {
+                return this.status = "SHIPPED"
+            } else if(this.status === "SHIPPED") {
+                return this.status = "DELIVERED"
+            }
+        }
+    }
     
     OrderModel.init({
         id: {
@@ -15,7 +24,7 @@ module.exports =(sequelize, Sequelize) => {
         total: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-
+            
         },
         items: {
             type: DataTypes.ARRAY(DataTypes.STRING, {
