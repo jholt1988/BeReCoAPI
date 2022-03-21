@@ -1,9 +1,9 @@
-const {User} = require('../db');
+const { User } = require('../db');
 
 
 
 exports.create = (req, res) => {
-    if (!req.body.username) {
+    if (!req.body.username || !req.body.password) {
         res.status(400).send({
             message: 'Error Creating User'
         });
@@ -18,12 +18,13 @@ exports.create = (req, res) => {
         lastName: req.body.lastName,
         DOB: req.body.DOB,
     
-
+    
     }
     User.create(user)
         .then(data => {
             res.send(data)
-            console.log(data)
+            console.log(data.json())
+
         })
         .catch(err => {
             res.status(404).send({
@@ -60,7 +61,7 @@ exports.update = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-    const id = req.params.id1
+    const id = req.params.id
 
     User.findByPk(id)
         .then(data => {
@@ -79,17 +80,17 @@ exports.getAll = (req, res) => {
     User.findAll()
         .then(data => {
             if (data) {
-               res.send(data)
+                res.send(data)
             } else {
                 res.status(404).send({
                     message: 'Error Retrieving Messages'
                 })
                 done()
-           }
+            }
         
         
+        })
 }
-
 exports.deleteOne = (req, res) => {
     const id = req.params.user
     
