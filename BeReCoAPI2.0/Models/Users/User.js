@@ -1,4 +1,4 @@
-const { DataTypes, Model, Op } = require('sequelize');
+console const { DataTypes, Model, Op } = require('sequelize');
 const bcrypt = require('bcrypt')
 
         
@@ -74,15 +74,14 @@ module.exports = (sequelize, Sequelize) => {
                     if (user.isNewRecord) {
                         const salt = await bcrypt.genSalt(10, "b");
                         user.password = await bcrypt.hashSync(user.password, salt)
-                        console.log(user.password)
-                        console.log(user.isNewRecord)
+                    
                     }
                 },
                 beforeUpdate: async (user) => {
                     if (user.password) {
                         const salt = await bcrypt.genSalt(10, "b");
                         user.password = await bcrypt.hashSync(user.password, salt);
-                        console.log(user.password)
+                    
                         
                     }
                 }
